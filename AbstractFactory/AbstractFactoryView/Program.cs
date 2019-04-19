@@ -1,7 +1,9 @@
 ﻿using AbstractFactoryServiceDAL.Interfaces;
 using AbstractFactoryModel;
-using AbstractFactoryServiceImplementList.Implementations;
+using AbstractFactoryServiceImplementDataBase;
+using AbstractFactoryServiceImplementDataBase.Implementations;
 using System;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Unity;
@@ -26,15 +28,17 @@ namespace AbstractFactoryView
         public static IUnityContainer BuildUnityContainer()
         {
             var currentContainer = new UnityContainer();
-            currentContainer.RegisterType<ICustomerService, CustomerServiceList>(new
+            currentContainer.RegisterType<DbContext, AbstractDbContext>(new
+  HierarchicalLifetimeManager());
+            currentContainer.RegisterType<ICustomerService, CustomerServiceDB>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IMaterialService, MaterialServiceList>(new
+            currentContainer.RegisterType<IMaterialService, MaterialServiceDB>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IZBIService, ZBIServiceList>(new
+            currentContainer.RegisterType<IZBIService, ZBIServiceDB>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IMainService, MainServiceList>(new
+            currentContainer.RegisterType<IMainService, MainServiceDB>(new
            HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IStorageService, StorageServiceList>(new
+            currentContainer.RegisterType<IStorageService, StorageServiceDB>(new
           HierarchicalLifetimeManager());
             return currentContainer;
         }
