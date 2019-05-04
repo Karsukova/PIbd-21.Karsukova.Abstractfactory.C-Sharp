@@ -11,27 +11,22 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Data.Entity;
-using Unity;
 using System.Windows.Forms;
 
 namespace AbstractFactoryView
 {
     public partial class FormStoragesLoad : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-        private readonly IReptService service;
-        public FormStoragesLoad(IReptService service)
+        public FormStoragesLoad()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void FormStoragesLoad_Load(object sender, EventArgs e)
         {
             try
             {
-                var dict = service.GetStoragesLoad();
+                var dict = APICustomer.GetRequest<List<StoragesLoadViewModel>>("api/Report/GetStoragesLoad");
                 if (dict != null)
                 {
                     dataGridView.Rows.Clear();
@@ -65,7 +60,7 @@ namespace AbstractFactoryView
             {
                 try
                 {
-                    service.SaveStoragesLoad(new ReptBindingModel
+                    APICustomer.PostRequest<ReptBindingModel, bool>("api/Rept/SaveStoragesLoad", new ReptBindingModel
                     {
                         FileName = sfd.FileName
                     });

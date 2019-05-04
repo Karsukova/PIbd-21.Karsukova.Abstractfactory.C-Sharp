@@ -10,19 +10,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Unity;
 
 namespace AbstractFactoryView
 {
     public partial class FormStorages : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-        private readonly IStorageService service;
-        public FormStorages(IStorageService service)
+        public FormStorages()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void FormStorages_Load(object sender, EventArgs e)
@@ -34,8 +29,7 @@ namespace AbstractFactoryView
         {
             try
             {
-                List<StorageViewModel> list = service.GetList();
-                if (list != null)
+                List<StorageViewModel> list = APICustomer.GetRequest<List<StorageViewModel>>("api/Storage/GetList"); if (list != null)
                 {
                     dataGridView.DataSource = list;
                     dataGridView.Columns[0].Visible = false;
@@ -51,7 +45,7 @@ namespace AbstractFactoryView
         }
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormStorage>();
+            var form = new FormStorage();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 LoadData();
@@ -61,7 +55,7 @@ namespace AbstractFactoryView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<FormStorage>();
+                var form = new FormStorage();
                 form.Id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -80,7 +74,8 @@ namespace AbstractFactoryView
                    Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        service.DelElement(id);
+                        APICustomer.PostRequest<StorageBindingModel, bool>("api/Storage/DelElement",
+                            new StorageBindingModel { Id = id });
                     }
                     catch (Exception ex)
                     {

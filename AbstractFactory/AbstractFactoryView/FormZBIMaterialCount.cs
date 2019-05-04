@@ -5,14 +5,11 @@ using AbstractFactoryModel;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Unity;
 
 namespace AbstractFactoryView
 {
     public partial class FormZBIMaterialCount : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
         public ZBIMaterialViewModel Model
         {
             set { model = value; }
@@ -21,18 +18,17 @@ namespace AbstractFactoryView
                 return model;
             }
         }
-        private readonly IMaterialService service;
         private ZBIMaterialViewModel model;
-        public FormZBIMaterialCount(IMaterialService service)
+        public FormZBIMaterialCount()
         {
             InitializeComponent();
-            this.service = service;
         }
         private void FormZBIMaterial_Load(object sender, EventArgs e)
         {
             try
             {
-                List<MaterialViewModel> list = service.GetList();
+                List<MaterialViewModel> list =
+                                    APICustomer.GetRequest<List<MaterialViewModel>>("api/Material/GetList");
                 if (list != null)
                 {
                     comboBoxMaterial.DisplayMember = "MaterialName";

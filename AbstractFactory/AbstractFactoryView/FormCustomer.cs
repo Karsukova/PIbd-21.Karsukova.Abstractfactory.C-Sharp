@@ -10,21 +10,16 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Unity;
 
 namespace AbstractFactoryView
 {
     public partial class FormCustomer : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
         public int Id { set { id = value; } }
-        private readonly ICustomerService service;
         private int? id;
-        public FormCustomer(ICustomerService service)
+        public FormCustomer()
         {
             InitializeComponent();
-            this.service = service;
         }
 
 
@@ -35,7 +30,7 @@ namespace AbstractFactoryView
             {
                 try
                 {
-                    CustomerViewModel view = service.GetElement(id.Value);
+                    CustomerViewModel view = APICustomer.GetRequest<CustomerViewModel>("api/Customer/Get/" + id.Value);
                     if (view != null)
                     {
                         textBoxFIO.Text = view.CustomerFIO;
@@ -62,15 +57,17 @@ namespace AbstractFactoryView
             {
                 if (id.HasValue)
                 {
-                    service.UpdElement(new CustomerBindingModel
-                    {
+                    APICustomer.PostRequest<CustomerBindingModel,
+                    bool>("api/Customer/UpdElement", new CustomerBindingModel
+                            {
                         Id = id.Value,
                         CustomerFIO = textBoxFIO.Text
                     });
                 }
                 else
                 {
-                    service.AddElement(new CustomerBindingModel
+                    APICustomer.PostRequest<CustomerBindingModel,
+                    bool>("api/Customer/AddElement", new CustomerBindingModel
                     {
                         CustomerFIO = textBoxFIO.Text
                     });

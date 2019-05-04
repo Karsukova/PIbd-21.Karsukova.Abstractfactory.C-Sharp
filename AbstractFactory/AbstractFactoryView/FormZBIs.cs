@@ -5,19 +5,14 @@ using AbstractFactoryModel;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Unity;
 
 namespace AbstractFactoryView
 {
     public partial class FormZBIs : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-        private readonly IZBIService service;
-        public FormZBIs(IZBIService service)
+        public FormZBIs()
         {
             InitializeComponent();
-            this.service = service;
         }
         private void FormZBIs_Load(object sender, EventArgs e)
         {
@@ -28,7 +23,7 @@ namespace AbstractFactoryView
         {
             try
             {
-                List<ZBIViewModel> list = service.GetList();
+                List<ZBIViewModel> list = APICustomer.GetRequest<List<ZBIViewModel>>("api/ZBI/GetList/");
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -45,7 +40,7 @@ namespace AbstractFactoryView
         }
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormZBI>();
+            var form = new FormZBI();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 LoadData();
@@ -55,7 +50,7 @@ namespace AbstractFactoryView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<FormZBI>();
+                var form = new FormZBI();
                 form.Id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -74,7 +69,8 @@ namespace AbstractFactoryView
                    Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        service.DelElement(id);
+                        APICustomer.PostRequest<ZBIBindingModel, bool>("api/Pizza/DelElement",
+                            new ZBIBindingModel { Id = id });
                     }
                     catch (Exception ex)
                     {
