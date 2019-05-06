@@ -14,7 +14,7 @@ namespace AbstractFactoryView
         private static HttpClient client = new HttpClient();
         public static void Connect()
         {
-            //client.BaseAddress = new Uri(ConfigurationManager.AppSettings["IPAddress"]);
+            client.BaseAddress = new Uri(Configuration.ConfigurationManager.AppSettings["IPAddress"]);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));

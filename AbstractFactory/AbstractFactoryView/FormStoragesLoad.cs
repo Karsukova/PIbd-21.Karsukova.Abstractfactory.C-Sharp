@@ -26,7 +26,7 @@ namespace AbstractFactoryView
         {
             try
             {
-                var dict = APICustomer.GetRequest<List<StoragesLoadViewModel>>("api/Report/GetStoragesLoad");
+                var dict = APICustomer.GetRequest<List<StoragesLoadViewModel>>("api/Rept/GetStoragesLoad");
                 if (dict != null)
                 {
                     dataGridView.Rows.Clear();
