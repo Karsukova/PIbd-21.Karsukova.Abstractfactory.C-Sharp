@@ -10,30 +10,20 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Unity;
 
 namespace AbstractFactoryView
 {
     public partial class FormCreateOrder : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-        private readonly ICustomerService serviceC;
-        private readonly IZBIService serviceP;
-        private readonly IMainService serviceM;
-        public FormCreateOrder(ICustomerService serviceC, IZBIService serviceP,
-       IMainService serviceM)
+        public FormCreateOrder()
         {
             InitializeComponent();
-            this.serviceC = serviceC;
-            this.serviceP = serviceP;
-            this.serviceM = serviceM;
         }
         private void FormCreateOrder_Load(object sender, EventArgs e)
         {
             try
             {
-                List<CustomerViewModel> listC = serviceC.GetList();
+                List<CustomerViewModel> listC = APICustomer.GetRequest<List<CustomerViewModel>>("api/Customer/GetList");
                 if (listC != null)
                 {
                     comboBoxCustomer.DisplayMember = "CustomerFIO";
@@ -42,7 +32,7 @@ namespace AbstractFactoryView
                     comboBoxCustomer.SelectedItem = null;
 
                 }
-                List<ZBIViewModel> listP = serviceP.GetList();
+                List<ZBIViewModel> listP = APICustomer.GetRequest<List<ZBIViewModel>>("api/ZBI/GetList");
                 if (listP != null)
                 {
                     comboBoxZBI.DisplayMember = "ZBIName";
@@ -65,7 +55,7 @@ namespace AbstractFactoryView
                 try
                 {
                     int id = Convert.ToInt32(comboBoxZBI.SelectedValue);
-                    ZBIViewModel product = serviceP.GetElement(id);
+                    ZBIViewModel product = APICustomer.GetRequest<ZBIViewModel>("api/ZBI/Get/" + id);
                     int count = Convert.ToInt32(textBoxCount.Text);
                     textBoxSum.Text = (count * product.Price).ToString();
                 }
@@ -107,7 +97,7 @@ namespace AbstractFactoryView
             }
             try
             {
-                serviceM.CreateOrder(new OrderBindingModel
+                APICustomer.PostRequest<OrderBindingModel, bool>("api/Order/CreateOrder", new OrderBindingModel
                 {
                     CustomerId = Convert.ToInt32(comboBoxCustomer.SelectedValue),
                     ZBIId = Convert.ToInt32(comboBoxZBI.SelectedValue),

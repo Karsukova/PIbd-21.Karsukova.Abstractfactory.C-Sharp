@@ -1,41 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using AbstractFactoryServiceDAL.BindingModel;
-using AbstractFactoryServiceDAL.ViewModel;
+﻿using AbstractFactoryServiceDAL.BindingModel;
 using AbstractFactoryServiceDAL.Interfaces;
-using AbstractFactoryModel;
+using AbstractFactoryServiceDAL.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System;
-using System.Text;
 using System.Windows.Forms;
-using Unity;
 
 namespace AbstractFactoryView
 {
     public partial class FormMain : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-        public readonly IMainService service;
-        public readonly IReptService Reptservice;
-        public FormMain(IMainService service, IReptService Reptservice)
+        
+        public FormMain()
         {
             InitializeComponent();
-            this.service = service;
-            this.Reptservice = Reptservice;
         }
         private void LoadData()
         {
 
             try
             {
-                List<OrderViewModel> list = service.GetList();
+                List<OrderViewModel> list = APICustomer.GetRequest<List<OrderViewModel>>("api/Main/GetList");
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -53,38 +37,38 @@ namespace AbstractFactoryView
                MessageBoxIcon.Error);
             }
         }
-       
-      
+
+
         private void клиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormCustomers>();
+            var form = new FormCustomers();
             form.ShowDialog();
         }
         private void компонентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormMaterials>();
+            var form = new FormMaterials();
             form.ShowDialog();
         }
         private void изделияToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormZBIs>();
+            var form = new FormZBIs();
             form.ShowDialog();
         }
         private void buttonCreateOrder_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormCreateOrder>();
+            var form = new FormCreateOrder();
             form.ShowDialog();
             LoadData();
         }
         private void складыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormStorages>();
+            var form = new FormStorages();
             form.ShowDialog();
         }
 
         private void пополнитьСкладToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormPutOnStorage>();
+            var form = new FormPutOnStorage();
             form.ShowDialog();
         }
         private void buttonTakeOrderInWork_Click(object sender, EventArgs e)
@@ -94,7 +78,8 @@ namespace AbstractFactoryView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    service.TakeOrderInWork(new OrderBindingModel { Id = id });
+                    APICustomer.PostRequest<OrderBindingModel,
+                    bool>("api/Main/TakeOrderInWork", new OrderBindingModel { Id = id });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -112,7 +97,9 @@ namespace AbstractFactoryView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    service.FinishOrder(new OrderBindingModel { Id = id });
+                    APICustomer.PostRequest<OrderBindingModel,
+                     bool>("api/Main/FinishOrder", new OrderBindingModel
+                     { Id = id });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -129,7 +116,8 @@ namespace AbstractFactoryView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    service.PayOrder(new OrderBindingModel { Id = id });
+                    APICustomer.PostRequest<OrderBindingModel, bool>("api/Main/.PayOrder",
+ new OrderBindingModel { Id = id });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -149,8 +137,9 @@ namespace AbstractFactoryView
             {
                 try
                 {
-                    Reptservice.SaveZBIPrice(new ReptBindingModel
-                    {
+                    APICustomer.PostRequest<ReptBindingModel,
+                        bool>("api/Rept/SaveProductPrice", new ReptBindingModel
+  {
                         FileName = sfd.FileName
                     });
                     MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK,
@@ -166,13 +155,13 @@ namespace AbstractFactoryView
         private void загруженностьСкладовToolStripMenuItem_Click(object sender, EventArgs
        e)
         {
-            var form = Container.Resolve<FormStoragesLoad>();
+            var form = new FormStoragesLoad();
 
             form.ShowDialog();
         }
         private void заказыКлиентовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormCustomerOrders>();
+            var form = new FormCustomerOrders();
             form.ShowDialog();
         }
 

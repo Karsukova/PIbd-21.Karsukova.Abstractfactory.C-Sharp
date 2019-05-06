@@ -3,7 +3,7 @@ using AbstractFactoryServiceDAL.ViewModel;
 using AbstractFactoryServiceDAL.Interfaces;
 using System;
 using System.Collections.Generic;
-using Microsoft.Reporting.WinForms;using Unity;
+using Microsoft.Reporting.WinForms;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -15,14 +15,10 @@ namespace AbstractFactoryView
 {
     public partial class FormCustomerOrders : Form
     {
-
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-        private readonly IReptService service;
-        public FormCustomerOrders(IReptService service)
+
+        public FormCustomerOrders()
         {
             InitializeComponent();
-            this.service = service;
         }
         private void buttonMake_Click(object sender, EventArgs e)
         {
@@ -40,13 +36,16 @@ namespace AbstractFactoryView
                 " по " +
                dateTimePickerTo.Value.ToShortDateString());
                 reportViewer.LocalReport.SetParameters(parameter);
-                var dataSource = service.GetCustomerOrders(new ReptBindingModel
+
+                List<CustomerOrdersViewModel> response = APICustomer.PostRequest<ReptBindingModel,
+                List<CustomerOrdersViewModel>>("api/Rept/GetCustomerOrders", new ReptBindingModel
                 {
                     DateFrom = dateTimePickerFrom.Value,
                     DateTo = dateTimePickerTo.Value
                 });
+              
                 ReportDataSource source = new ReportDataSource("DataSetOrders",
-               dataSource);
+               response);
                 reportViewer.LocalReport.DataSources.Add(source);
                 reportViewer.RefreshReport();
             }
@@ -72,9 +71,11 @@ namespace AbstractFactoryView
             {
                 try
                 {
-                    service.SaveCustomerOrders(new ReptBindingModel
-                    {
-                        FileName = sfd.FileName,
+                    APICustomer.PostRequest<ReptBindingModel,
+                    bool>("api/Rept/SaveClientOrders", new ReptBindingModel
+
+  {
+      FileName = sfd.FileName,
                         DateFrom = dateTimePickerFrom.Value,
                         DateTo = dateTimePickerTo.Value
                     });
@@ -91,9 +92,10 @@ namespace AbstractFactoryView
 
         private void FormCustomerOrders_Load(object sender, EventArgs e)
         {
-
             this.reportViewer.RefreshReport();
         }
+
+
     }
 
 }

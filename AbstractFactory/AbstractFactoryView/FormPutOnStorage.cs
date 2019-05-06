@@ -10,31 +10,21 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Unity;
 
 
 namespace AbstractFactoryView
 {
     public partial class FormPutOnStorage : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-        private readonly IStorageService serviceS;
-        private readonly IMaterialService serviceC;
-        private readonly IMainService serviceM;
-        public FormPutOnStorage(IStorageService serviceS, IMaterialService serviceC,
-       IMainService serviceM)
+        public FormPutOnStorage()
         {
             InitializeComponent();
-            this.serviceS = serviceS;
-            this.serviceC = serviceC;
-            this.serviceM = serviceM;
         }
         private void FormPutOnStorage_Load(object sender, EventArgs e)
         {
             try
             {
-                List<MaterialViewModel> listC = serviceC.GetList();
+                List<MaterialViewModel> listC = APICustomer.GetRequest<List<MaterialViewModel>>("api/Material/GetList");
                 if (listC != null)
                 {
                     comboBoxMaterial.DisplayMember = "MaterialName";
@@ -42,7 +32,7 @@ namespace AbstractFactoryView
                     comboBoxMaterial.DataSource = listC;
                     comboBoxMaterial.SelectedItem = null;
                 }
-                List<StorageViewModel> listS = serviceS.GetList();
+                List<StorageViewModel> listS = APICustomer.GetRequest<List<StorageViewModel>>("api/Storage/GetList"); ;
                 if (listS != null)
                 {
 
@@ -80,7 +70,8 @@ namespace AbstractFactoryView
             }
             try
             {
-                serviceM.PutComponentOnStorage(new StorageMaterialBindingModel
+                APICustomer.PostRequest<StorageMaterialBindingModel, bool>("api/Order/PutComponentOnStorage", 
+                    new StorageMaterialBindingModel
                 {
                     MaterialId = Convert.ToInt32(comboBoxMaterial.SelectedValue),
                     StorageId = Convert.ToInt32(comboBoxStorage.SelectedValue),

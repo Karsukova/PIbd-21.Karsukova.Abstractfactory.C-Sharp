@@ -91,7 +91,7 @@
             // 
             // reportViewer
             // 
-            this.reportViewer.LocalReport.ReportEmbeddedResource = "AbstractFactoryView.SqlServerTypes.ReptCustomerOrders.rdlc";
+            this.reportViewer.LocalReport.ReportEmbeddedResource = "AbstractFactoryView.ReptCustomerOrder.rdlc";
             this.reportViewer.Location = new System.Drawing.Point(-1, 55);
             this.reportViewer.Name = "reportViewer";
             this.reportViewer.ServerReport.BearerToken = null;

@@ -5,22 +5,17 @@ using AbstractFactoryModel;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Unity;
 
 namespace AbstractFactoryView
 {
     public partial class FormZBI : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
         public int Id { set { id = value; } }
-        private readonly IZBIService service;
         private int? id;
         private List<ZBIMaterialViewModel> zbiMaterials;
-        public FormZBI(IZBIService service)
+        public FormZBI()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void FormZBI_Load(object sender, EventArgs e)
@@ -29,7 +24,7 @@ namespace AbstractFactoryView
             {
                 try
                 {
-                    ZBIViewModel view = service.GetElement(id.Value);
+                    ZBIViewModel view = APICustomer.GetRequest<ZBIViewModel>("api/Client/Get/" + id.Value);
                     if (view != null)
                     {
                         textBoxName.Text = view.ZBIName;
@@ -73,7 +68,7 @@ namespace AbstractFactoryView
         }
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<FormZBIMaterialCount>();
+            var form = new FormZBIMaterialCount();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 if (form.Model != null)
@@ -91,7 +86,7 @@ namespace AbstractFactoryView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<FormZBIMaterialCount>();
+                var form = new FormZBIMaterialCount();
                 form.Model =
                zbiMaterials[dataGridView.SelectedRows[0].Cells[0].RowIndex];
                 if (form.ShowDialog() == DialogResult.OK)
@@ -162,7 +157,8 @@ namespace AbstractFactoryView
                 }
                 if (id.HasValue)
                 {
-                    service.UpdElement(new ZBIBindingModel
+                    APICustomer.PostRequest<ZBIBindingModel,
+                    bool>("api/ZBI/UpdElement", new ZBIBindingModel
                     {
                         Id = id.Value,
                         ZBIName = textBoxName.Text,
@@ -172,9 +168,9 @@ namespace AbstractFactoryView
                 }
                 else
                 {
-
-                    service.AddElement(new ZBIBindingModel
-                    {
+                    APICustomer.PostRequest<ZBIBindingModel,
+                      bool>("api/ZBI/AddElement", new ZBIBindingModel
+                      {
                         ZBIName = textBoxName.Text,
                         Price = Convert.ToInt32(textBoxPrice.Text),
                         ZBIMaterials = zbiMaterialBM

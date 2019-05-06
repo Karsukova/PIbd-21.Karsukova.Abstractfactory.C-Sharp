@@ -10,21 +10,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Unity;
+
 
 namespace AbstractFactoryView
 {
     public partial class FormMaterial : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
         public int Id { set { id = value; } }
-        private readonly IMaterialService service;
         private int? id;
-        public FormMaterial(IMaterialService service)
+        public FormMaterial()
         {
             InitializeComponent();
-            this.service = service;
         }
 
 
@@ -35,7 +31,7 @@ namespace AbstractFactoryView
             {
                 try
                 {
-                    MaterialViewModel view = service.GetElement(id.Value);
+                    MaterialViewModel view = APICustomer.GetRequest<MaterialViewModel>("api/Material/Get/" + id.Value);
                     if (view != null)
                     {
                         textBoxMaterial.Text = view.MaterialName;
@@ -62,16 +58,18 @@ namespace AbstractFactoryView
             {
                 if (id.HasValue)
                 {
-                    service.UpdElement(new MaterialBindingModel
-                    {
+                    APICustomer.PostRequest<MaterialBindingModel,
+                   bool>("api/Material/UpdElement", new MaterialBindingModel
+                   {
                         Id = id.Value,
                         MaterialName = textBoxMaterial.Text
                     });
                 }
                 else
                 {
-                    service.AddElement(new MaterialBindingModel
-                    {
+                    APICustomer.PostRequest<MaterialBindingModel,
+                     bool>("api/Material/AddElement", new MaterialBindingModel
+                     {
                         MaterialName = textBoxMaterial.Text
                     });
                 }
