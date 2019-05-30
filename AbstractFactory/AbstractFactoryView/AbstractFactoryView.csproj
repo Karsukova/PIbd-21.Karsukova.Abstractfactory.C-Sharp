@@ -32,7 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -187,10 +194,17 @@
       <Project>{dcfa3993-5c55-4fdc-a772-644db85989e2}</Project>
       <Name>AbstractFactoryServiceDAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AbstractFactoryServiceImplementDataBase\AbstractFactoryServiceImplementDataBase.csproj">
+      <Project>{e1924274-fbed-45cb-85b0-598e2727052f}</Project>
+      <Name>AbstractFactoryServiceImplementDataBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AbstractFactoryServiceImplementList\AbstractFactoryServiceImplementList.csproj">
       <Project>{972f1549-d78c-4a98-abc1-9911bec3d3ea}</Project>
       <Name>AbstractFactoryServiceImplementList</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

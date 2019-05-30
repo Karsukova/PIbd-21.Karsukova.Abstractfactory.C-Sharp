@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{972F1549-D78C-4A98-ABC1-9911BEC3D3EA}</ProjectGuid>
+    <ProjectGuid>{E1924274-FBED-45CB-85B0-598E2727052F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AbstractFactoryServiceImplementList</RootNamespace>
-    <AssemblyName>AbstractFactoryServiceImplementList</AssemblyName>
+    <RootNamespace>AbstractFactoryServiceImplementDataBase</RootNamespace>
+    <AssemblyName>AbstractFactoryServiceImplementDataBase</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,21 +41,24 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unity.Abstractions, Version=4.1.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.5.10.3\lib\net40\Unity.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Container, Version=5.10.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.5.10.3\lib\net40\Unity.Container.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataListSingleton.cs" />
-    <Compile Include="Implementations\CustomerServiceList.cs" />
-    <Compile Include="Implementations\MainServiceList.cs" />
-    <Compile Include="Implementations\MaterialServiceList.cs" />
-    <Compile Include="Implementations\StorageServiceList.cs" />
-    <Compile Include="Implementations\ZBIServiceList.cs" />
+    <Compile Include="AbstractDbContext.cs" />
+    <Compile Include="Implementations\CustomerServiceDB.cs" />
+    <Compile Include="Implementations\MainServiceDB.cs" />
+    <Compile Include="Implementations\MaterialServiceDB.cs" />
+    <Compile Include="Implementations\StorageServiceDB.cs" />
+    <Compile Include="Implementations\ZBIServiceDB.cs" />
+    <Compile Include="Migrations\201904192010268_FirstMigration.cs" />
+    <Compile Include="Migrations\201904192010268_FirstMigration.Designer.cs">
+      <DependentUpon>201904192010268_FirstMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbstractFactoryModel\AbstractFactoryModel.csproj">
@@ -68,8 +71,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <EmbeddedResource Include="Migrations\201904192010268_FirstMigration.resx">
+      <DependentUpon>201904192010268_FirstMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

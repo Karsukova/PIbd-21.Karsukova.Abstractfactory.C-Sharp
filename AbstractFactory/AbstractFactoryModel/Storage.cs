@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AbstractFactoryModel
 {
@@ -10,6 +12,9 @@ namespace AbstractFactoryModel
     public class Storage
     {
         public int Id { get; set; }
+        [Required]
         public string StorageName { get; set; }
+        [ForeignKey("MaterialId")]
+        public virtual List<StorageMaterial> StorageMaterials { get; set; }
     }
 }
