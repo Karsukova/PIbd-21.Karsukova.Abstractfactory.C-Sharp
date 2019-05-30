@@ -40,6 +40,8 @@ namespace AbstractFactoryView
            HierarchicalLifetimeManager());
             currentContainer.RegisterType<IStorageService, StorageServiceDB>(new
           HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IReptService, ReptServiceDB>(new
+                      HierarchicalLifetimeManager());
             return currentContainer;
         }
     }
